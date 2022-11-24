@@ -3,8 +3,8 @@ use std::time::{Duration, Instant};
 use super::frame::{Drawable, Frame};
 
 pub struct Bullet {
-    x: usize,
-    y: usize,
+    pub x: usize,
+    pub y: usize,
     impact: bool,
     delta: Instant,
 }
@@ -31,9 +31,9 @@ impl Bullet {
         }
     }
 
-    // pub fn impacted(&mut self) {
-    //     self.impact = true;
-    // }
+    pub fn impacted(&mut self) {
+        self.impact = true;
+    }
 
     pub fn is_dead(&self) -> bool {
         return self.impact || self.y == 1;
@@ -44,6 +44,7 @@ impl Drawable for Bullet {
     fn draw(&self, frame: &mut Frame) {
         if self.impact {
             frame[self.x][self.y] = "O";
+            return;
         } else {
             frame[self.x][self.y - 1] = "|";
         }

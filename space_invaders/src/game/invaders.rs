@@ -1,11 +1,10 @@
 use std::time::{Duration, Instant};
 
-use super::{frame::Drawable, COLUMNS, ROWS};
+use super::{bullet_projectile::Bullet, frame::Drawable, COLUMNS, ROWS};
 
 pub struct Invader {
     x: usize,
     y: usize,
-    alive: bool,
 }
 
 pub struct Invaders {
@@ -15,8 +14,8 @@ pub struct Invaders {
 }
 
 impl Invader {
-    pub fn new(x: usize, y: usize, alive: bool) -> Self {
-        Self { x, y, alive }
+    pub fn new(x: usize, y: usize) -> Self {
+        Self { x, y }
     }
 }
 
@@ -26,7 +25,7 @@ impl Invaders {
         for x in 0..COLUMNS {
             for y in 0..ROWS {
                 if x > 10 && x < COLUMNS - 11 && y > 4 && y < 15 && x % 3 == 0 && y % 3 == 0 {
-                    army.push(Invader::new(x, y, true))
+                    army.push(Invader::new(x, y))
                 }
             }
         }
@@ -65,6 +64,21 @@ impl Invaders {
                 }
             }
             self.move_timer = Instant::now();
+        }
+    }
+
+    pub fn all_killed(&self) -> bool {
+        self.army.is_empty()
+    }
+
+    pub fn invader_shot_down(&mut self, bullet: &mut Bullet) {
+        if let Some(index) = self
+            .army
+            .iter()
+            .position(|invader| (invader.x == bullet.x) && (invader.y == bullet.y))
+        {
+            bullet.impacted();
+            self.army.remove(index);
         }
     }
 }

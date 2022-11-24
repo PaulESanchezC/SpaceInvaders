@@ -55,6 +55,7 @@ pub fn game_loop(stdout: &mut Stdout) {
         for bullet in game_bullets.iter_mut() {
             bullet.refresh_position();
             bullet.draw(&mut new_frame);
+            invaders.invader_shot_down(bullet)
         }
 
         player.draw(&mut new_frame);
@@ -64,5 +65,9 @@ pub fn game_loop(stdout: &mut Stdout) {
 
         render(stdout, &current_frame, &new_frame, false, player.ammo);
         current_frame = new_frame;
+
+        if invaders.all_killed() {
+            break;
+        }
     }
 }
